@@ -4,9 +4,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/spike-workflow.yml'
 
 jobs:
   spike-workflow:
