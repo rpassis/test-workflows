@@ -37,7 +37,7 @@ jobs:
     name: Spike workflow - result
     runs-on: ubuntu-latest
     needs: [spike-reusable-workflow]
-    if: failure() || cancelled()
+    if: failure()
     steps:
       - name: "Fail"
         run: exit 1
