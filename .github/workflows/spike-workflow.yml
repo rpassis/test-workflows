@@ -22,7 +22,7 @@ jobs:
     uses: ./.github/workflows/spike-reusable-workflow.yml
     secrets: inherit
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - skip: false
