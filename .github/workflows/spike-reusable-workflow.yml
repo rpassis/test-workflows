@@ -1,0 +1,35 @@
+name: Reusable Spike
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: "Name of the workflow"
+        required: true
+        type: string
+      skip:
+        description: "Whether to skip the workflow"
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  workflow-diagnostics:
+    if: inputs.skip == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inputs and Environment
+        run: |
+          echo ""
+          echo "inputs: ${{ toJSON(inputs) }}"
+          echo ""
+          echo "env: ${{ toJSON(env) }}"
+          echo ""
+          echo "env: ${{ toJSON(github.event.pull_request) }}"
+          echo ""
+      - name: "Check if should fail"
+        run: |
+          if [ "${{ inputs.name }}" == "first" ]; then
+            exit 1
+          else
+            exit 0
+          fi
