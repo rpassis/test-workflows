@@ -31,5 +31,6 @@ jobs:
           if [ "${{ inputs.name }}" == "first" ]; then
             exit 1
           else
+            sleep 5
             exit 0
           fi
