@@ -25,9 +25,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - skip: true
+          - skip: false
             name: first
-          - skip: true
+          - skip: false
             name: second
     with:
       skip: ${{ matrix.skip }}
