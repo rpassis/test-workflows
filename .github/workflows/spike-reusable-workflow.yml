@@ -1,6 +1,13 @@
 name: Reusable Spike
 on:
   workflow_call:
+    outputs:
+      first-result:
+        description: "Result of the first workflow run"
+        value: ${{ jobs.workflow-diagnostics.outputs.first-result }}
+      second-result:
+        description: "Result of the second workflow run"
+        value: ${{ jobs.workflow-diagnostics.outputs.second-result }}
     inputs:
       name:
         description: "Name of the workflow"
@@ -16,6 +23,9 @@ jobs:
   workflow-diagnostics:
     if: inputs.skip == false
     runs-on: ubuntu-latest
+    outputs:
+      first-result: ${{ steps.results.outputs.first-result }}
+      second-result: ${{ steps.results.outputs.second-result }}
     steps:
       - name: Inputs and Environment
         run: |
@@ -26,11 +36,10 @@ jobs:
           echo ""
           echo "env: ${{ toJSON(github.event.pull_request) }}"
           echo ""
-      - name: "Check if should fail"
+      - name: "Results"
+        id: results
         run: |
-          if [ "${{ inputs.name }}" == "first" ]; then
-            exit 1
-          else
-            sleep 5
-            exit 0
-          fi
+          first_result=true
+          second_result=true
+          echo "first-result=$first_result" >> $GITHUB_OUTPUT
+          echo "second-result=$second_result" >> $GITHUB_OUTPUT
