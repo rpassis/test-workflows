@@ -2,15 +2,12 @@ name: Reusable Spike
 on:
   workflow_call:
     outputs:
-      first-result:
-        description: "Result of the first workflow run"
-        value: ${{ jobs.workflow-diagnostics.outputs.first-result }}
-      second-result:
-        description: "Result of the second workflow run"
-        value: ${{ jobs.workflow-diagnostics.outputs.second-result }}
+      result:
+        description: "Result of all workflow runs"
+        value: ${{ jobs.workflow-diagnostics.outputs.result }}
     inputs:
-      name:
-        description: "Name of the workflow"
+      payload:
+        description: "Name event that started the workflow"
         required: true
         type: string
       skip:
@@ -24,22 +21,11 @@ jobs:
     if: inputs.skip == false
     runs-on: ubuntu-latest
     outputs:
-      first-result: ${{ steps.results.outputs.first-result }}
-      second-result: ${{ steps.results.outputs.second-result }}
+      result: ${{ steps.results.outputs.result }}
     steps:
       - name: Inputs and Environment
         run: |
-          echo ""
-          echo "inputs: ${{ toJSON(inputs) }}"
-          echo ""
-          echo "env: ${{ toJSON(env) }}"
-          echo ""
-          echo "env: ${{ toJSON(github.event.pull_request) }}"
-          echo ""
-      - name: "Results"
-        id: results
-        run: |
-          first_result=true
-          second_result=true
-          echo "first-result=$first_result" >> $GITHUB_OUTPUT
-          echo "second-result=$second_result" >> $GITHUB_OUTPUT
+          pull_request=$(echo '${{ inputs.payload }}' | jq '.pull_request.number')
+          echo "The pull request is: $pull_request"
+          echo "========================="
+          exit 0
