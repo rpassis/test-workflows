@@ -1,6 +1,10 @@
 name: Reusable Spike
 on:
   workflow_call:
+    outputs:
+      result:
+        description: "Result of all workflow runs"
+        value: ${{ jobs.workflow-diagnostics.outputs.result }}
     inputs:
       name:
         description: "Name of the workflow"
@@ -16,6 +20,8 @@ jobs:
   workflow-diagnostics:
     if: inputs.skip == false
     runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.results.outputs.result }}
     steps:
       - name: Inputs and Environment
         run: |
@@ -26,10 +32,10 @@ jobs:
           echo ""
           echo "env: ${{ toJSON(github.event.pull_request) }}"
           echo ""
-      - name: "Check if should fail"
+      - name: "Results"
+        id: results
         run: |
-          if [ "${{ inputs.name }}" == "first" ]; then
-            exit 1
-          else
-            exit 0
-          fi
+          echo "Current result is ${{ steps.results.outputs.result }}"
+          result=${{ inputs.name }}
+          echo "Result is $result"
+          echo "result=$result" >> $GITHUB_OUTPUT
