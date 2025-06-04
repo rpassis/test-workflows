@@ -1,0 +1,17 @@
+# Keep this as 'Spike' and it won't pollute the list of workflows in the GitHub UI
+name: Spike Workflow run
+on:
+  workflow_run:
+    workflows:
+      - Spike
+    types: completed
+  workflow_dispatch:
+
+jobs:
+  spike-workflow-run:
+    name: Spike workflow run
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check contents"
+        run: |
+          echo ${{ toJSON(github.event.workflow_run) }}

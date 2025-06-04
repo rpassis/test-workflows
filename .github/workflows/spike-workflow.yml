@@ -1,10 +1,9 @@
 # Keep this as 'Spike' and it won't pollute the list of workflows in the GitHub UI
 name: Spike
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/spike-workflow.yml'
 
 jobs:
   spike-workflow:
@@ -12,33 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: "Check contets"
         run: |
-          echo "This is a spike workflow step."
-          echo "${{ toJson(github.event) }}"
-          ls -la .github/workflows
+          contains=${{ contains(fromJSON('["refs/heads/main", "refs/heads/hotfix"]'), github.ref) }}
+          echo "Contains? $contains"
+          contains2=${{ contains(fromJSON('["refs/heads/main", "refs/heads/hotfix"]'), 'refs/heads/hotfix') }}
+          echo "Contains2? $contains2"
 
   spike-reusable-workflow:
     name: "Spike workflow - reusable"
     uses: ./.github/workflows/spike-reusable-workflow.yml
     secrets: inherit
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - skip: false
-            name: first
-          - skip: false
-            name: second
+            payload: ${{ toJSON(github.event) }}
     with:
       skip: ${{ matrix.skip }}
-      name: ${{ matrix.name }}
-
-  spike-workflow-result:
-    name: Spike workflow - result
-    runs-on: ubuntu-latest
-    needs: [spike-reusable-workflow]
-    if: failure() || cancelled()
-    steps:
-      - name: "Fail"
-        run: exit 1
+      payload: ${{ matrix.payload }}
