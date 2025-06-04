@@ -7,6 +7,9 @@ on:
       - Spike
     types: completed
 
+concurrency:
+  group: workflow-run-${{ github.event.workflow_run.head_branch || github.ref }}
+
 jobs:
   spike-workflow-run:
     name: Spike workflow run
@@ -14,4 +17,10 @@ jobs:
     steps:
       - name: "Check contents"
         run: |
+          echo "Head branch - github.event.workflow_run.head_branch"
+          echo "${{ github.event.workflow_run.head_branch }}"
+          echo "====================="
+          echo "Github ref - github.ref"
+          echo "${{ github.ref }}"
+          echo "====================="
           echo "${{ toJSON(github.event.workflow_run) }}"
