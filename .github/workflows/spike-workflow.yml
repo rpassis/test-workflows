@@ -1,31 +1,17 @@
 # Keep this as 'Spike' and it won't pollute the list of workflows in the GitHub UI
 name: Spike
 on:
-  merge_group:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
-  spike-workflow:
-    name: Spike workflow
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: "Check contets"
-        run: |
-          contains=${{ contains(fromJSON('["refs/heads/main", "refs/heads/hotfix"]'), github.ref) }}
-          echo "Contains? $contains"
-          contains2=${{ contains(fromJSON('["refs/heads/main", "refs/heads/hotfix"]'), 'refs/heads/hotfix') }}
-          echo "Contains2? $contains2"
-
   spike-reusable-workflow:
     name: "Spike workflow - reusable"
     uses: ./.github/workflows/spike-reusable-workflow.yml
     secrets: inherit
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         include:
           - skip: false
