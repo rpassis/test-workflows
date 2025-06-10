@@ -7,7 +7,7 @@ on:
 
 jobs:
   spike-reusable-workflow:
-    name: "Spike workflow - reusable"
+    name: "Spike workflow - reusable ${{ inputs.skip }}"
     uses: ./.github/workflows/spike-reusable-workflow.yml
     secrets: inherit
     strategy:
@@ -19,3 +19,11 @@ jobs:
     with:
       skip: ${{ matrix.skip }}
       payload: ${{ matrix.payload }}
+
+  spike-result:
+      name: "Spike workflow - result"
+      needs: [spike-reusable-workflow]
+      steps:
+        name: "Result"
+        run: |
+          echo 0
