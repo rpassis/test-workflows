@@ -1,6 +1,7 @@
 # Keep this as 'Spike' and it won't pollute the list of workflows in the GitHub UI
 name: Spike
 on:
+  merge_group:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
