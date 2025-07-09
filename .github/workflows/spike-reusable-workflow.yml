@@ -18,6 +18,7 @@ on:
 
 jobs:
   workflow-diagnostics:
+    name: "Diagnostics"
     if: inputs.skip == false
     runs-on: ubuntu-latest
     outputs:
@@ -25,7 +26,16 @@ jobs:
     steps:
       - name: Inputs and Environment
         run: |
-          pull_request=$(echo '${{ inputs.payload }}' | jq '.pull_request.number')
-          echo "The pull request is: $pull_request"
-          echo "========================="
+          exit 1
+
+  workflow-finish:
+    name: "Finish"
+    needs: [workflow-diagnostics]
+    if: always()
+    runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.results.outputs.result }}
+    steps:
+      - name: Inputs and Environment
+        run: |
           exit 0
