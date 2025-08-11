@@ -6,24 +6,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  spike-reusable-workflow:
-    name: "Spike workflow - reusable ${{ inputs.skip }}"
-    uses: ./.github/workflows/spike-reusable-workflow.yml
-    secrets: inherit
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - skip: false
-            payload: ${{ toJSON(github.event) }}
-    with:
-      skip: ${{ matrix.skip }}
-      payload: ${{ matrix.payload }}
-
-  spike-result:
-      name: "Spike workflow - result"
-      needs: [spike-reusable-workflow]
-      steps:
-        name: "Result"
+  first-job:
+    name: "First job"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Result"
         run: |
-          echo 0
+          exit 0
+  second-job:
+    name: "Second job"
+    needs: first-job
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Result"
+        run: |
+          exit 1
+  third-job:
+    name: "Third job"
+    runs-on: ubuntu-latest
+    if: ${{ needs.second-job.result != 'cancelled' }}
+    needs: second-job
+    steps:
+      - name: "Result"
+        run: |
+          echo "Third job ran"
