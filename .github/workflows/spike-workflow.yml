@@ -16,7 +16,7 @@ jobs:
 
       - name: "Check contets"
         run: |
-          githubEventPayload=${{ toJSON(github.event }}
+          githubEventPayload=${{ toJSON(github.event) }}
           echo "github.event is $githubEventPayload"
 
   spike-reusable-workflow:
