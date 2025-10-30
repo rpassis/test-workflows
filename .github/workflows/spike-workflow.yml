@@ -18,6 +18,9 @@ jobs:
         run: |
           githubEventPayload=${{ toJSON(github.event) }}
           echo "github.event is $githubEventPayload"
+          echo "github.ref is ${{ github.ref }}"
+          echo "github.head_ref is ${{ github.head_ref }}"
+          echo "github.head_branch is ${{ github.head_branch }}"
 
   spike-reusable-workflow:
     name: "Spike workflow - reusable"
